@@ -2,20 +2,24 @@
 
 ## Description
 
-This project is
+This project is part of hiring process of Incedo. It's a Node.js application that serves as a RESTful API for searching
+artists by name and exporting the search results to a CSV file. It provides a simple and efficient way to retrieve
+artist information and store it in a user-specified CSV file. Also, it can be used to retrieve the created csv files by
+the file name
 
-## Apps and Packages
+## Folder Structure
 
-This turborepo uses [Yarn](https://classic.yarnpkg.com/lang/en/) as a package manager. It includes the following
-packages/apps:
-
-- `@repos/gli-server`: an [Express](https://expressjs.com/) server
-- `@repos/gli-api`: [Trpc](https://expressjs.com/) implementation used as middleware in the express server and the next
-  app
-- `@repos/gli-react` : a [React](https://reactjs.org/) app
-
-- Tooling folder : contains shared configs for popular tools like jest prettier and typescript.
-- The Monorepo is managed by [Turborepo](https://turbo.build/repo/docs)
+- documentation : it contains the swagger file documentation of the api
+- src/assets : it contains the assets that are shared inside the application (E.g : here it contains "
+  dummy-artists.json")
+- src/config : it contains the configuration files of external libraries and packges
+- src/constant : it contains the constants shared inside the application
+- src/controllers : it contains the controllers of the application : the entry points of each api
+- src/helpers : it contains the files which contains formatting logic and helpers functions
+- src/models : it contains the schema used alongside the app (Exception classes, Dtos(Data transfer objects))
+- src/routes : it contains the routers classes of the application
+- src/services : it contains the service layer of the application, the classes that handles the business logic inside
+  the app
 
 ## Run locally
 
@@ -26,20 +30,43 @@ In the root folder:
 - create an .env file
 - copy the contents of .env.example in .env
 
-#### Step 2 : Install dependencies
+(I know the .env.example must not contain a real API_KEY but in my case I didn't find a way to give you the credentials
+to access the external api, it could be made by mail, but I thought maybe it won't be read by the one who will test)
+
+### Running the application in a docker container
+
+#### Step 2 : Run the project
 
 ```bash
-  yarn
+ docker-compose up -d
 ```
 
-#### Step 3 : Setup local Db
+### Running the application without a docker container
+
+#### Step 2 : Install Dependencies
 
 ```bash
- yarn db:init
+ npm install
 ```
+
+#### Step 3 : Creating an output_files folder
+
+    Create a folder named "output_files" in the root directory of the application
+
+- hint : this folder will store the csv files made by the requests
 
 #### Step 4 : Run the project
 
 ```bash
- yarn dev
+ npm run dev
 ```
+
+## Access the api documentation
+
+To access the api documentation, after running the application either on your local pc or inside a container you need to
+access
+the swagger documentation through this link
+
+    http://localhost:3000/api-docs
+
+
