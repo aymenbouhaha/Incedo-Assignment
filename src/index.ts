@@ -1,22 +1,37 @@
-import express, { Express, Request, Response } from "express";
+import express, { Application } from "express";
+import bodyParser from "body-parser";
+import ArtistRoute from "./routes/artist.route";
 import dotenv from "dotenv";
-import { SearchArtistByNameDtoSchema } from "./models/dto/search-artist.schema.dto";
-import { ArtistService } from "./services/artist.service";
 
 
 dotenv.config();
 
-const app: Express = express();
-const port = process.env.PORT || 3000;
+class Server {
+	public app: Application;
 
-app.get("/", async (req: Request, res: Response) => {
-	const queryParams = SearchArtistByNameDtoSchema.parse(req.query);
-	const artistService = new ArtistService();
-	const result = await artistService.findArtistByName(queryParams);
-	res.send("Testing the server is working");
-});
+	constructor() {
+		this.app = express();
+		this.config();
+		this.routes();
+	}
 
+	private config(): void {
+		this.app.use(bodyParser.json());
+		this.app.use(bodyParser.urlencoded({ extended: false }));
+	}
 
-app.listen(port, () => {
-	console.log(`[server]: Server is running at http://localhost:${port}`);
-});
+	private routes(): void {
+		this.app.use("/artists", ArtistRoute);
+
+	}
+
+	public start(): void {
+		const port = process.env.PORT || 3000;
+		this.app.listen(port, () => {
+			console.log(`Server is running on http://localhost:${port}`);
+		});
+	}
+}
+
+const server = new Server();
+server.start();

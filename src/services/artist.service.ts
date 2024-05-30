@@ -1,11 +1,13 @@
 import { SearchArtistDto } from "../models/dto/search-artist.schema.dto";
 import { axios } from "../config/axios.config";
-import { ApiResultSchema, Artist } from "../models/dto/api-result.schemas";
+import { ApiResultSchema } from "../models/dto/api-result.schemas.dto";
 import { ArtistCsvService } from "./csv.service";
 import { Response } from "express";
 import path from "node:path";
 import fs from "fs";
-
+import dummyArtist from "../assets/dummy-artists.json";
+import { ResultPaginationPipe } from "../helpers/pipes/result-pagination.pipe";
+import { API_LIMIT } from "../constant/external-api.constants";
 
 export class ArtistService {
 
@@ -14,20 +16,28 @@ export class ArtistService {
 		try {
 			const searchResult = await axios.get("", {
 				params: {
+					limit: API_LIMIT,
 					method: "artist.search",
-					artist: searchParams.artist_name,
+					artist: searchParams.artistName,
 					page: searchParams.page,
 				},
 			});
-			const parsedResult = ApiResultSchema.parse(searchResult.data);
-			if (parsedResult.length) {
+			const { artists, totalResults } = ApiResultSchema.parse(searchResult.data);
+			if (artists.length) {
 				const artistCsvService = ArtistCsvService.getInstance();
 				await artistCsvService.writeToArtistsCsvFile(
-					parsedResult,
+					artists,
 					"artist.csv",
 				);
-				return parsedResult;
+				return {
+					dummyArtist: false,
+					...ResultPaginationPipe.paginateResult(artists, searchParams.page ?? 1, totalResults),
+				};
 			}
+			return {
+				dummyArtist: true,
+				...ResultPaginationPipe.paginateResult(dummyArtist, 1, dummyArtist.length),
+			};
 		} catch (e) {
 			console.log(e);
 		}
@@ -48,3 +58,5 @@ export class ArtistService {
 	}
 
 }
+
+export default new ArtistService();

@@ -34,13 +34,17 @@ export type Artist = z.infer<typeof ApiArtistSchema>;
 export const ApiResultSchema = z
 	.object({
 		results: z.object({
+			"opensearch:totalResults": z.string().transform((val) => Number(val)),
 			artistmatches: z.object({
 				artist: z.array(ApiArtistSchema),
 			}),
 		}),
 	})
 	.transform((result) => {
-		return result.results.artistmatches.artist;
+		return {
+			totalResults: result.results["opensearch:totalResults"],
+			artists: result.results.artistmatches.artist,
+		};
 	});
 
 export type ApiResult = z.infer<typeof ApiResultSchema>;

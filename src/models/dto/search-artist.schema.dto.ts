@@ -11,6 +11,11 @@ export const SearchArtistByNameDtoSchema = z.object({
 	artist_name: z.string({
 		required_error: "You must enter the name you're searching for",
 	}),
+}).transform((value) => {
+	return {
+		page: value.page,
+		artistName: value.artist_name,
+	};
 });
 
 export type SearchArtistDto = z.infer<typeof SearchArtistByNameDtoSchema>;

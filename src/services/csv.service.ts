@@ -1,4 +1,4 @@
-import { Artist } from "../models/dto/api-result.schemas";
+import { Artist } from "../models/dto/api-result.schemas.dto";
 import { createObjectCsvWriter } from "csv-writer";
 import fs from "fs";
 import csvParser from "csv-parser";
