@@ -48,3 +48,10 @@ export const ApiResultSchema = z
 	});
 
 export type ApiResult = z.infer<typeof ApiResultSchema>;
+
+export const ExternalApiErrorSchema = z.object({
+	message: z.string(),
+	error: z.number(),
+});
+
+export type ExternalApiError = z.infer<typeof ExternalApiErrorSchema>;

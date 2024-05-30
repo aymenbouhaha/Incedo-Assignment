@@ -2,10 +2,10 @@ import { Artist } from "../models/dto/api-result.schemas.dto";
 import { createObjectCsvWriter } from "csv-writer";
 import fs from "fs";
 import csvParser from "csv-parser";
+import { CustomException } from "../models/exceptions/custom.exception";
 
 export class ArtistCsvService {
-	private constructor() {
-	}
+	private constructor() {}
 
 	private static instance: ArtistCsvService;
 
@@ -39,7 +39,10 @@ export class ArtistCsvService {
 			await csvWriter.writeRecords(newArtists);
 			console.log("The Csv file was updated successfully.");
 		} catch (error) {
-			console.error("An error occurred when updating the csv file", error);
+			throw new CustomException(
+				"An error occurred when updating the csv file",
+				500,
+			);
 		}
 	}
 
@@ -70,7 +73,10 @@ export class ArtistCsvService {
 		});
 	}
 
-	private async findNewArtists(artists: Artist[], filePath: string): Promise<Artist[]> {
+	private async findNewArtists(
+		artists: Artist[],
+		filePath: string,
+	): Promise<Artist[]> {
 		const existingArtists = await this.readFromCsvFile(filePath);
 		return artists.filter(
 			(artist) =>
@@ -82,6 +88,5 @@ export class ArtistCsvService {
 						existing.smallImage === artist.smallImage,
 				),
 		);
-
 	}
 }

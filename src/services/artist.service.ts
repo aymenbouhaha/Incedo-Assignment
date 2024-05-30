@@ -8,10 +8,12 @@ import fs from "fs";
 import dummyArtist from "../assets/dummy-artists.json";
 import { ResultPaginationPipe } from "../helpers/pipes/result-pagination.pipe";
 import { API_LIMIT } from "../constant/external-api.constants";
+import { AxiosError } from "axios";
+import { apiErrorFormatter } from "../helpers/formatter/api-error.formatter";
+import { CustomException } from "../models/exceptions/custom.exception";
+import { ZodError } from "zod";
 
 export class ArtistService {
-
-
 	async findArtistByName(searchParams: SearchArtistDto) {
 		try {
 			const searchResult = await axios.get("", {
@@ -22,41 +24,57 @@ export class ArtistService {
 					page: searchParams.page,
 				},
 			});
-			const { artists, totalResults } = ApiResultSchema.parse(searchResult.data);
+			const { artists, totalResults } = ApiResultSchema.parse(
+				searchResult.data,
+			);
 			if (artists.length) {
 				const artistCsvService = ArtistCsvService.getInstance();
-				await artistCsvService.writeToArtistsCsvFile(
-					artists,
-					"artist.csv",
-				);
+				await artistCsvService.writeToArtistsCsvFile(artists, "artist.csv");
 				return {
 					dummyArtist: false,
-					...ResultPaginationPipe.paginateResult(artists, searchParams.page ?? 1, totalResults),
+					...ResultPaginationPipe.paginateResult(
+						artists,
+						searchParams.page ?? 1,
+						totalResults,
+					),
 				};
 			}
 			return {
 				dummyArtist: true,
-				...ResultPaginationPipe.paginateResult(dummyArtist, 1, dummyArtist.length),
+				...ResultPaginationPipe.paginateResult(
+					dummyArtist,
+					1,
+					dummyArtist.length,
+				),
 			};
-		} catch (e) {
-			console.log(e);
+		} catch (e: any) {
+			if (e instanceof AxiosError) {
+				throw apiErrorFormatter(e);
+			}
+			if (e instanceof ZodError) {
+				throw new CustomException("An error occurred, please retry later", 500);
+			}
+			throw e;
 		}
 	}
-
 
 	getArtistsCsvFile(response: Response) {
 		const filePath = path.join(process.cwd(), "artist.csv");
 		fs.access(filePath, fs.constants.F_OK, (err) => {
 			if (err) {
-				return response.status(404).send("File not found");
+				return response
+					.status(404)
+					.send(new CustomException("File not found", 404).toJson());
 			}
 			response.setHeader("Content-Type", "text/csv");
-			response.setHeader("Content-Disposition", "attachment; filename=artist.csv");
+			response.setHeader(
+				"Content-Disposition",
+				"attachment; filename=artist.csv",
+			);
 			const fileStream = fs.createReadStream(filePath);
 			fileStream.pipe(response);
 		});
 	}
-
 }
 
 export default new ArtistService();
