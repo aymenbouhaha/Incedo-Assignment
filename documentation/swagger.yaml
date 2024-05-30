@@ -1,0 +1,117 @@
+openapi: 3.0.0
+info:
+  title: Incedo Assignment API
+  version: 1.0.0
+  description: API documentation for the Incedo Assignment API
+  contact:
+    name: Your Name
+servers:
+  - url: http://localhost:3000
+paths:
+  /artists:
+    get:
+      summary: Find artist by name
+      description: Returns an artist by name
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  dummyArtist:
+                    type: boolean
+                  totalCount:
+                    type: integer
+                  previous:
+                    type: string
+                    nullable: true
+                  next:
+                    type: string
+                    nullable: true
+                  currentCount:
+                    type: integer
+                  result:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Artist'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '502':
+          description: Bad Gateway
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - in: query
+          name: artist_name
+          required: true
+          schema:
+            type: string
+          description: The name of the artist to search for
+        - in: query
+          name: page
+          required: false
+          schema:
+            type: integer
+            format: int32
+          description: Page number for pagination
+  /artists/csv:
+    get:
+      summary: Get artists CSV file
+      description: Returns a CSV file of artists
+      responses:
+        '200':
+          description: Successful response
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    Artist:
+      type: object
+      properties:
+        name:
+          type: string
+        url:
+          type: string
+        mbid:
+          type: string
+        smallImage:
+          type: string
+        image:
+          type: string
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string

@@ -2,7 +2,9 @@ import express, { Application } from "express";
 import bodyParser from "body-parser";
 import ArtistRoute from "./routes/artist.route";
 import dotenv from "dotenv";
-
+import swaggerUi from "swagger-ui-express";
+import YAML from "yamljs";
+import path from "node:path";
 
 dotenv.config();
 
@@ -13,6 +15,7 @@ class Server {
 		this.app = express();
 		this.config();
 		this.routes();
+		this.documentation();
 	}
 
 	private config(): void {
@@ -22,7 +25,16 @@ class Server {
 
 	private routes(): void {
 		this.app.use("/artists", ArtistRoute);
+	}
 
+	private documentation(): void {
+		const filePath = path.join(process.cwd(), "documentation/swagger.yaml");
+		const swaggerDocument = YAML.load(filePath);
+		this.app.use(
+			"/api-docs",
+			swaggerUi.serve,
+			swaggerUi.setup(swaggerDocument),
+		);
 	}
 
 	public start(): void {
