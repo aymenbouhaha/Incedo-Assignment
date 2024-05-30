@@ -1,9 +1,11 @@
 import { z } from "zod";
+import { CsvFileNameSchema } from "./get-csv-file.dto";
 
 const numberRegex = /^-?\d+(\.\d+)?$/;
 
 export const SearchArtistByNameDtoSchema = z
 	.object({
+		csv_file_name: CsvFileNameSchema,
 		page: z
 			.string()
 			.regex(numberRegex, { message: "The page must be a number" })
@@ -11,7 +13,7 @@ export const SearchArtistByNameDtoSchema = z
 			.optional(),
 		artist_name: z
 			.string({
-				required_error: "You must enter the name you're searching for",
+				required_error: "Please enter the name you're searching for",
 			})
 			.min(1, {
 				message: "The artist name must contain at least 1 characters",
@@ -21,6 +23,7 @@ export const SearchArtistByNameDtoSchema = z
 		return {
 			page: value.page,
 			artistName: value.artist_name,
+			csvFileName: value.csv_file_name,
 		};
 	});
 

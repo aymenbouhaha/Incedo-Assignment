@@ -12,16 +12,19 @@ import { AxiosError } from "axios";
 import { apiErrorFormatter } from "../helpers/formatter/api-error.formatter";
 import { CustomException } from "../models/exceptions/custom.exception";
 import { ZodError } from "zod";
+import { ARTISTS_CSV_OUTPUT_FOLDER } from "../constant/common";
+import { GetCsvFileDto } from "../models/dto/get-csv-file.dto";
 
 export class ArtistService {
 	async findArtistByName(searchParams: SearchArtistDto) {
 		try {
+			const { artistName, page, csvFileName } = searchParams;
 			const searchResult = await axios.get("", {
 				params: {
 					limit: API_LIMIT,
 					method: "artist.search",
-					artist: searchParams.artistName,
-					page: searchParams.page,
+					artist: artistName,
+					page: page,
 				},
 			});
 			const { artists, totalResults } = ApiResultSchema.parse(
@@ -29,7 +32,11 @@ export class ArtistService {
 			);
 			if (artists.length) {
 				const artistCsvService = ArtistCsvService.getInstance();
-				await artistCsvService.writeToArtistsCsvFile(artists, "artist.csv");
+				const filePath = path.join(
+					process.cwd(),
+					`${ARTISTS_CSV_OUTPUT_FOLDER}${csvFileName}.csv`,
+				);
+				await artistCsvService.writeToArtistsCsvFile(artists, filePath);
 				return {
 					dummyArtist: false,
 					...ResultPaginationPipe.paginateResult(
@@ -58,8 +65,12 @@ export class ArtistService {
 		}
 	}
 
-	getArtistsCsvFile(response: Response) {
-		const filePath = path.join(process.cwd(), "artist.csv");
+	getArtistsCsvFile(response: Response, getCsvDto: GetCsvFileDto) {
+		const { csvFileName } = getCsvDto;
+		const filePath = path.join(
+			process.cwd(),
+			`${ARTISTS_CSV_OUTPUT_FOLDER}${csvFileName}.csv`,
+		);
 		fs.access(filePath, fs.constants.F_OK, (err) => {
 			if (err) {
 				return response

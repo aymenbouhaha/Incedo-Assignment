@@ -4,6 +4,7 @@ import artistService from "../services/artist.service";
 import { ZodError } from "zod";
 import { CustomException } from "../models/exceptions/custom.exception";
 import { zodErrorFormatter } from "../helpers/formatter/zod-error.formatter";
+import { GetCsvFileSchemaDto } from "../models/dto/get-csv-file.dto";
 
 export class ArtistController {
 	async findArtistByName(request: Request, response: Response) {
@@ -35,9 +36,16 @@ export class ArtistController {
 
 	getArtistsCsvFile(request: Request, response: Response) {
 		try {
-			artistService.getArtistsCsvFile(response);
+			const queryParams = GetCsvFileSchemaDto.parse(request.query);
+			artistService.getArtistsCsvFile(response, queryParams);
 		} catch (error) {
 			console.error(error);
+			if (error instanceof ZodError) {
+				const errorFormatted = zodErrorFormatter(error.errors);
+				return response
+					.status(400)
+					.send(new CustomException(errorFormatted, 400).toJson());
+			}
 			return response
 				.status(500)
 				.send(

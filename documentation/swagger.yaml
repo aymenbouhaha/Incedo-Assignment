@@ -24,10 +24,10 @@ paths:
                     type: boolean
                   totalCount:
                     type: integer
-                  previous:
+                  previousPageNumber:
                     type: string
                     nullable: true
-                  next:
+                  nextPageNumber:
                     type: string
                     nullable: true
                   currentCount:
@@ -62,6 +62,12 @@ paths:
             type: string
           description: The name of the artist to search for
         - in: query
+          name: csv_file_name
+          required: true
+          schema:
+            type: string
+          description: The name of the file where to store fetched data
+        - in: query
           name: page
           required: false
           schema:
@@ -72,6 +78,12 @@ paths:
     get:
       summary: Get artists CSV file
       description: Returns a CSV file of artists
+      parameters:
+        - in: query
+          name: csv_file_name
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: Successful response
@@ -87,7 +99,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '404':
-          description: Internal Server Error
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '400':
+          description: Bad Request
           content:
             application/json:
               schema:
