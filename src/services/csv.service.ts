@@ -3,6 +3,13 @@ import { createObjectCsvWriter } from "csv-writer";
 import fs from "fs";
 import csvParser from "csv-parser";
 import { CustomException } from "../models/exceptions/custom.exception";
+import {
+	CSV_IMAGE_COLUMN_NAME,
+	CSV_MBID_COLUMN_NAME,
+	CSV_NAME_COLUMN_NAME,
+	CSV_SMALL_IMAGE_COLUMN_NAME,
+	CSV_URL_COLUMN_NAME,
+} from "../constant/common";
 
 export class ArtistCsvService {
 	private constructor() {}
@@ -18,7 +25,6 @@ export class ArtistCsvService {
 	}
 
 	async writeToArtistsCsvFile(artists: Artist[], filePath: string) {
-		console.log("hey", filePath);
 		const newArtists = await this.findNewArtists(artists, filePath);
 		if (newArtists.length === 0) {
 			console.log("There is no new records to add");
@@ -28,11 +34,11 @@ export class ArtistCsvService {
 		const csvWriter = createObjectCsvWriter({
 			path: filePath,
 			header: [
-				{ id: "name", title: "Name" },
-				{ id: "mbid", title: "MBID" },
-				{ id: "url", title: "URL" },
-				{ id: "image", title: "Image" },
-				{ id: "smallImage", title: "Small Image" },
+				{ id: "name", title: CSV_NAME_COLUMN_NAME },
+				{ id: "mbid", title: CSV_MBID_COLUMN_NAME },
+				{ id: "url", title: CSV_URL_COLUMN_NAME },
+				{ id: "image", title: CSV_IMAGE_COLUMN_NAME },
+				{ id: "smallImage", title: CSV_SMALL_IMAGE_COLUMN_NAME },
 			],
 			append: fileExists,
 		});
@@ -56,11 +62,11 @@ export class ArtistCsvService {
 					.pipe(csvParser())
 					.on("data", (row: any) => {
 						existingRecords.push({
-							name: row.Name,
-							url: row.URL,
-							mbid: row.MBID,
-							smallImage: row["Small Image"],
-							image: row.Image,
+							name: row[CSV_NAME_COLUMN_NAME],
+							url: row[CSV_URL_COLUMN_NAME],
+							mbid: row[CSV_MBID_COLUMN_NAME],
+							smallImage: row[CSV_SMALL_IMAGE_COLUMN_NAME],
+							image: row[CSV_IMAGE_COLUMN_NAME],
 						});
 					})
 					.on("end", () => {

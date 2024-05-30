@@ -15,7 +15,7 @@ the file name
 - `src/config` : it contains the configuration files of external libraries and packges
 - `src/constant` : it contains the constants shared inside the application
 - `src/controllers` : it contains the controllers of the application : the entry points of each api
-- `src/helpers` : it contains the files which contains formatting logic and helpers functions
+- `src/helpers` : it contains the files which contains formatting logic, pipes, and helpers functions
 - `src/models` : it contains the schema used alongside the app (Exception classes, Dtos(Data transfer objects))
 - `src/routes` : it contains the routers classes of the application
 - `src/services` : it contains the service layer of the application, the classes that handles the business logic inside

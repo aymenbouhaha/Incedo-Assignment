@@ -7,7 +7,10 @@ import path from "node:path";
 import fs from "fs";
 import dummyArtist from "../assets/dummy-artists.json";
 import { ResultPaginationPipe } from "../helpers/pipes/result-pagination.pipe";
-import { API_LIMIT } from "../constant/external-api.constants";
+import {
+	API_LIMIT,
+	SEARCH_ARTIST_METHOD,
+} from "../constant/external-api.constants";
 import { AxiosError } from "axios";
 import { apiErrorFormatter } from "../helpers/formatter/api-error.formatter";
 import { CustomException } from "../models/exceptions/custom.exception";
@@ -22,7 +25,7 @@ export class ArtistService {
 			const searchResult = await axios.get("", {
 				params: {
 					limit: API_LIMIT,
-					method: "artist.search",
+					method: SEARCH_ARTIST_METHOD,
 					artist: artistName,
 					page: page,
 				},

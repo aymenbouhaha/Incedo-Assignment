@@ -1,5 +1,6 @@
 import Axios from "axios";
 import dotenv from "dotenv";
+import { RESULT_FORMAT } from "../constant/external-api.constants";
 
 dotenv.config();
 
@@ -12,7 +13,7 @@ axios.interceptors.request.use((config) => {
 	config.params = {
 		...params,
 		api_key: process.env.API_KEY,
-		format: "json",
+		format: RESULT_FORMAT,
 	};
 	return config;
 });
