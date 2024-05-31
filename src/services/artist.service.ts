@@ -6,7 +6,7 @@ import { Response } from "express";
 import path from "node:path";
 import fs from "fs";
 import dummyArtist from "../assets/dummy-artists.json";
-import { ResultPaginationPipe } from "../helpers/pipes/result-pagination.pipe";
+import { paginateResultPipe } from "../helpers/pipes/result-pagination.pipe";
 import {
 	API_LIMIT,
 	SEARCH_ARTIST_METHOD,
@@ -42,7 +42,7 @@ export class ArtistService {
 				await artistCsvService.writeToArtistsCsvFile(artists, filePath);
 				return {
 					dummyArtist: false,
-					...ResultPaginationPipe.paginateResult(
+					...paginateResultPipe(
 						artists,
 						searchParams.page ?? 1,
 						totalResults,
@@ -52,7 +52,7 @@ export class ArtistService {
 			}
 			return {
 				dummyArtist: true,
-				...ResultPaginationPipe.paginateResult(
+				...paginateResultPipe(
 					dummyArtist,
 					1,
 					dummyArtist.length,
