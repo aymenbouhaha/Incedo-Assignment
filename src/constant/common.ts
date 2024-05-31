@@ -4,3 +4,4 @@ export const CSV_MBID_COLUMN_NAME = "MBID";
 export const CSV_URL_COLUMN_NAME = "URL";
 export const CSV_IMAGE_COLUMN_NAME = "Image";
 export const CSV_SMALL_IMAGE_COLUMN_NAME = "Small Image";
+export const NUMBER_REGEX = /^-?\d+(\.\d+)?$/;

@@ -1,14 +1,13 @@
 import { z } from "zod";
 import { CsvFileNameSchema } from "./get-csv-file.dto";
-
-const numberRegex = /^-?\d+(\.\d+)?$/;
+import { NUMBER_REGEX } from "../../constant/common";
 
 export const SearchArtistByNameDtoSchema = z
 	.object({
 		csv_file_name: CsvFileNameSchema,
 		page: z
 			.string()
-			.regex(numberRegex, { message: "The page must be a number" })
+			.regex(NUMBER_REGEX, { message: "The page must be a number" })
 			.transform((val) => Number(val))
 			.optional(),
 		artist_name: z

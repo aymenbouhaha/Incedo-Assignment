@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const CsvFileNameSchema = z
 	.string({
-		required_error: "Please enter a file name where to store",
+		required_error: "Please enter a file name where to store the csv file",
 	})
 	.regex(/^[^.]*$/, {
 		message: 'The file name must not contain "."',

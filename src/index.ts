@@ -40,7 +40,10 @@ class Server {
 	public start(): void {
 		const port = process.env.PORT || 3000;
 		this.app.listen(port, () => {
-			console.log(`Server is running on http://localhost:${port}`);
+			console.log(`Server is running on port ${port}`);
+			console.log(
+				`Please access api documentation on http://localhost:${port}/api-docs`,
+			);
 		});
 	}
 }

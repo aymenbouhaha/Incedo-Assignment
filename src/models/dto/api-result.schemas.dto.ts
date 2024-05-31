@@ -1,15 +1,27 @@
 import { z } from "zod";
+import { NUMBER_REGEX } from "../../constant/common";
 
 export const ApiArtistSchema = z
 	.object({
-		name: z.string(),
-		url: z.string().url("The provided format is invalid"),
-		mbid: z.string(),
+		name: z.string({
+			required_error: "The name is required",
+		}),
+		url: z
+			.string({
+				required_error: "The url is required",
+			})
+			.url("The provided format is invalid"),
+		mbid: z.string({
+			required_error: "The mbid is required",
+		}),
 		image: z.array(
 			z.object({
 				"#text": z.string(),
 				size: z.string(),
 			}),
+			{
+				required_error: "The images are required",
+			},
 		),
 	})
 	.transform((artist) => {
@@ -24,8 +36,8 @@ export const ApiArtistSchema = z
 			name: artist.name,
 			url: artist.url,
 			mbid: artist.mbid,
-			smallImage: finalImages.get("small"),
-			image: finalImages.get("mega"),
+			smallImage: finalImages.get("small") ?? "",
+			image: finalImages.get("mega") ?? "",
 		};
 	});
 
@@ -34,7 +46,10 @@ export type Artist = z.infer<typeof ApiArtistSchema>;
 export const ApiResultSchema = z
 	.object({
 		results: z.object({
-			"opensearch:totalResults": z.string().transform((val) => Number(val)),
+			"opensearch:totalResults": z
+				.string()
+				.regex(NUMBER_REGEX, { message: "The total results must be a number" })
+				.transform((val) => Number(val)),
 			artistmatches: z.object({
 				artist: z.array(ApiArtistSchema),
 			}),
@@ -47,11 +62,11 @@ export const ApiResultSchema = z
 		};
 	});
 
-export type ApiResult = z.infer<typeof ApiResultSchema>;
-
 export const ExternalApiErrorSchema = z.object({
-	message: z.string(),
-	error: z.number(),
+	message: z.string({
+		required_error: "The error message is required",
+	}),
+	error: z.number({
+		required_error: "The error code is required",
+	}),
 });
-
-export type ExternalApiError = z.infer<typeof ExternalApiErrorSchema>;
