@@ -4,7 +4,7 @@
 
 This project is part of hiring process of Incedo. It's a Node.js application that serves as a RESTful API for searching
 artists by name and exporting the search results to a CSV file. It provides a simple and efficient way to retrieve
-artist information and store it in a user-specified CSV file. Also, it can be used to retrieve the created csv files by
+artists information and store it in a user-specified CSV file. Also, it can be used to retrieve the created csv files by
 the file name
 
 ## Folder Structure

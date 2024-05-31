@@ -19,7 +19,7 @@ import { ARTISTS_CSV_OUTPUT_FOLDER } from "../constant/common";
 import { GetCsvFileDto } from "../models/dto/get-csv-file.dto";
 
 export class ArtistService {
-	async findArtistByName(searchParams: SearchArtistDto) {
+	async findArtistsByName(searchParams: SearchArtistDto) {
 		try {
 			const { artistName, page, csvFileName } = searchParams;
 			const searchResult = await axios.get("", {

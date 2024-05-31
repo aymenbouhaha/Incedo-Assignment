@@ -10,7 +10,7 @@ export class ArtistController {
 	async findArtistByName(request: Request, response: Response) {
 		try {
 			const queryParams = SearchArtistByNameDtoSchema.parse(request.query);
-			const result = await artistService.findArtistByName(queryParams);
+			const result = await artistService.findArtistsByName(queryParams);
 			response.send(result);
 		} catch (error) {
 			console.error(error);
