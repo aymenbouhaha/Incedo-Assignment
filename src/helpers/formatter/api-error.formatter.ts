@@ -10,6 +10,7 @@ export const apiErrorFormatter = (error: AxiosError) => {
 			);
 			return new CustomException(externalApiError.message, 502);
 		} catch (e) {
+			console.error(e);
 			return new CustomException("An Error Occurred, please retry later", 500);
 		}
 	}

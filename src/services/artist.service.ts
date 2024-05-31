@@ -60,6 +60,7 @@ export class ArtistService {
 				),
 			};
 		} catch (e: any) {
+			console.error(e);
 			if (e instanceof AxiosError) {
 				throw apiErrorFormatter(e);
 			}
