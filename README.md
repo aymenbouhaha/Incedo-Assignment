@@ -12,12 +12,12 @@ the file name
 - `documentation`documentation : it contains the swagger file documentation of the api
 - `src/assets` : it contains the assets that are shared inside the application (E.g : here it contains "
   dummy-artists.json")
-- `src/config` : it contains the configuration files of external libraries and packges
+- `src/config` : it contains the configuration files of external libraries and packages
 - `src/constant` : it contains the constants shared inside the application
 - `src/controllers` : it contains the controllers of the application : the entry points of each api
 - `src/helpers` : it contains the files which contains formatting logic, pipes, and helpers functions
-- `src/models` : it contains the schema used alongside the app (Exception classes, Dtos(Data transfer objects))
-- `src/routes` : it contains the routers classes of the application
+- `src/models` : it contains the schema used alongside the app (Exception classes, Dtos(Data transfer objects) etc...)
+- `src/routes` : it contains the routers classes of the application that routes requests to the specific controller
 - `src/services` : it contains the service layer of the application, the classes that handles the business logic inside
   the app
 
