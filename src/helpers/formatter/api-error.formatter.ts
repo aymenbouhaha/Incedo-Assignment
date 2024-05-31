@@ -13,4 +13,5 @@ export const apiErrorFormatter = (error: AxiosError) => {
 			return new CustomException("An Error Occurred, please retry later", 500);
 		}
 	}
+	return new CustomException("An Error Occurred, please retry later", 500);
 };
