@@ -1,8 +1,11 @@
-import { API_LIMIT } from "../../constant/external-api.constants";
-
 export class ResultPaginationPipe {
-	static paginateResult(data: any[], page: number, total: number) {
-		const nextPageExist = Math.ceil(total / API_LIMIT) > page;
+	static paginateResult(
+		data: any[],
+		page: number,
+		total: number,
+		limit: number,
+	) {
+		const nextPageExist = Math.ceil(total / limit) > page;
 		return {
 			totalCount: total,
 			previousPageNumber: page !== 1 ? page - 1 : null,

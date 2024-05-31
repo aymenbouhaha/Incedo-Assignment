@@ -46,6 +46,7 @@ export class ArtistService {
 						artists,
 						searchParams.page ?? 1,
 						totalResults,
+						API_LIMIT,
 					),
 				};
 			}
@@ -54,6 +55,7 @@ export class ArtistService {
 				...ResultPaginationPipe.paginateResult(
 					dummyArtist,
 					1,
+					dummyArtist.length,
 					dummyArtist.length,
 				),
 			};

@@ -46,7 +46,6 @@ export class ArtistCsvService {
 			await csvWriter.writeRecords(newArtists);
 			console.log("The Csv file was updated successfully.");
 		} catch (error) {
-			console.log(error);
 			throw new CustomException(
 				"An error occurred when updating the csv file",
 				500,
